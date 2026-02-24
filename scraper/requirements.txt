@@ -1,0 +1,2 @@
+instaloader==4.13.1
+google-cloud-storage==2.18.2

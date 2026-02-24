@@ -1,0 +1,132 @@
+/**
+ * Public styles for Instagram Scraper Feed plugin.
+ */
+
+/* Container */
+.ig-scraper-container {
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: var(--wp--style--global--wide-size);
+}
+
+/* Grid */
+.ig-scraper-grid {
+  display: grid;
+  grid-gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Responsive columns */
+.ig-scraper-columns-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.ig-scraper-columns-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.ig-scraper-columns-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.ig-scraper-columns-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 767px) {
+  .ig-scraper-columns-3,
+  .ig-scraper-columns-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .ig-scraper-columns-2,
+  .ig-scraper-columns-3,
+  .ig-scraper-columns-4 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* Item */
+.ig-scraper-item {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding-bottom: 100%; /* Square aspect ratio */
+  border-radius: 12px;
+}
+
+.ig-scraper-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.ig-scraper-item:hover img {
+  transform: scale(1.05);
+}
+
+/* Caption overlay */
+.ig-scraper-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.ig-scraper-caption-inner {
+  max-height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  font-size: 15px;
+}
+
+.ig-scraper-item:hover .ig-scraper-caption {
+  opacity: 1;
+}
+
+/* Date overlay */
+.ig-scraper-date {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 5px 8px;
+  font-size: 15px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0 12px 0 12px;
+}
+
+.ig-scraper-item:hover .ig-scraper-date {
+  opacity: 1;
+}
+
+/* Error message */
+.ig-scraper-error {
+  padding: 20px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
