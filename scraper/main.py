@@ -41,10 +41,21 @@ def scrape_profile(username: str, post_count: int, session_id: str | None = None
         quiet=True,
     )
 
-    # Use session cookie if provided (for private profiles or rate limiting)
+    # Use session cookie if provided (avoids 429 rate limiting on anonymous requests)
     if session_id:
         loader.context._session.cookies.set("sessionid", session_id, domain=".instagram.com")
-        print(f"Using provided session cookie for authentication")
+        # Also set required companion cookies for the session to be recognized
+        loader.context._session.cookies.set("ds_user_id", "", domain=".instagram.com")
+        loader.context._session.cookies.set("csrftoken", "", domain=".instagram.com")
+        # Test if the session is valid by checking login status
+        try:
+            username_from_session = loader.test_login()
+            if username_from_session:
+                print(f"Authenticated as: {username_from_session}")
+            else:
+                print("WARNING: Session cookie provided but login test failed. Proceeding anyway...")
+        except Exception as e:
+            print(f"WARNING: Could not verify session: {e}. Proceeding anyway...")
 
     print(f"Loading profile: {username}")
     profile = instaloader.Profile.from_username(loader.context, username)
