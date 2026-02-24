@@ -79,11 +79,23 @@ gcloud run jobs execute instagram-scraper --region=europe-west1 --project=my-pro
 
 ### Install the WordPress Plugin
 
-1. Copy the `wordpress/` folder to `wp-content/plugins/instagram-scraper/`
+**Option A — Upload zip via WordPress admin (easiest):**
+
+1. Download `instagram-scraper.zip` from the [latest GitHub Release](https://github.com/lajlev/instagram-scraper/releases/latest)
+   — or build it locally with `make zip`
+2. In WordPress admin, go to **Plugins > Add New > Upload Plugin**
+3. Upload the zip and activate
+
+**Option B — Manual:**
+
+1. Copy the contents of the `wordpress/` folder to `wp-content/plugins/instagram-scraper/`
 2. Activate the plugin in WordPress admin
-3. Go to **Settings > Instagram Feed**
-4. Enter your JSON feed URL: `https://storage.googleapis.com/<bucket>/posts.json`
-5. Add `[instagram_feed]` to any page or post
+
+**Then configure:**
+
+1. Go to **Settings > Instagram Feed**
+2. Enter your JSON feed URL: `https://storage.googleapis.com/<bucket>/posts.json`
+3. Add `[instagram_feed]` to any page or post
 
 ## Cost
 
