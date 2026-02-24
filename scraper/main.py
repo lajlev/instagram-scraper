@@ -16,6 +16,7 @@ import os
 import re
 import sys
 from datetime import datetime, timezone
+from urllib.parse import unquote
 
 import instaloader
 from google.cloud import storage
@@ -39,23 +40,31 @@ def scrape_profile(username: str, post_count: int, session_id: str | None = None
         save_metadata=False,
         compress_json=False,
         quiet=True,
+        max_connection_attempts=1,
     )
 
     # Use session cookie if provided (avoids 429 rate limiting on anonymous requests)
     if session_id:
-        loader.context._session.cookies.set("sessionid", session_id, domain=".instagram.com")
-        # Also set required companion cookies for the session to be recognized
-        loader.context._session.cookies.set("ds_user_id", "", domain=".instagram.com")
-        loader.context._session.cookies.set("csrftoken", "", domain=".instagram.com")
-        # Test if the session is valid by checking login status
+        # URL-decode in case the value was percent-encoded (e.g. %3A → :)
+        session_id = unquote(session_id)
+
+        # Extract the user ID from the session cookie (format: "userid:hash:...")
+        user_id = session_id.split(":")[0] if ":" in session_id else ""
+
+        # Set the required cookies for a valid Instagram session
+        loader.context._session.cookies.set("sessionid", session_id, domain=".instagram.com", path="/")
+        if user_id:
+            loader.context._session.cookies.set("ds_user_id", user_id, domain=".instagram.com", path="/")
+
+        # Verify the session works
         try:
             username_from_session = loader.test_login()
             if username_from_session:
                 print(f"Authenticated as: {username_from_session}")
             else:
-                print("WARNING: Session cookie provided but login test failed. Proceeding anyway...")
+                print("WARNING: Session cookie provided but not recognized. Will try anyway...")
         except Exception as e:
-            print(f"WARNING: Could not verify session: {e}. Proceeding anyway...")
+            print(f"WARNING: Could not verify session: {e}. Will try anyway...")
 
     print(f"Loading profile: {username}")
     profile = instaloader.Profile.from_username(loader.context, username)
